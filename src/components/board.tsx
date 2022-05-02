@@ -1,68 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
 import Square from "./square";
-import CalculateWinner from "./gameLogic";
 
-export default function Board() {
-  const [boardState, setBoardState] = useState(Array(9).fill(null));
-  const [turn, setTurn] = useState(0);
+interface BoardProps {
+  boardState: string[];
+  status: string;
+  onClickSquare: (index: number) => void;
+}
 
-  const winner = CalculateWinner(boardState);
-
-  function GetStatus() {
-    if (winner) {
-      if (winner === "Draw") {
-        return "Draw";
-      }
-      return "The winner is " + winner;
-    } else {
-      return "Next player: " + GetCurrentPlayer();
-    }
-  }
-
+export default function Board(props: BoardProps) {
   function renderSquare(s: string, i: number) {
-    return <Square value={s} update={Update} index={i} />;
-  }
-
-  function GetCurrentPlayer() {
-    return turn % 2 > 0 ? "X" : "O";
-  }
-
-  function Update(i: number) {
-    if (!winner && boardState[i] === null) {
-      const newBoardState = boardState.slice();
-      newBoardState[i] = GetCurrentPlayer();
-      setBoardState(newBoardState);
-      setTurn(turn + 1);
-    }
-  }
-
-  function Reset() {
-    setTurn(0);
-    setBoardState(Array(9).fill(null));
+    return <Square value={s} onClickSquare={props.onClickSquare} index={i} />;
   }
 
   return (
     <>
       <div>
-        <div className="status">{GetStatus()}</div>
+        <div className="status">{props.status}</div>
         <div className="board-row">
-          {renderSquare(boardState[0], 0)}
-          {renderSquare(boardState[1], 1)}
-          {renderSquare(boardState[2], 2)}
+          {renderSquare(props.boardState[0], 0)}
+          {renderSquare(props.boardState[1], 1)}
+          {renderSquare(props.boardState[2], 2)}
         </div>
         <div className="board-row">
-          {renderSquare(boardState[3], 3)}
-          {renderSquare(boardState[4], 4)}
-          {renderSquare(boardState[5], 5)}
+          {renderSquare(props.boardState[3], 3)}
+          {renderSquare(props.boardState[4], 4)}
+          {renderSquare(props.boardState[5], 5)}
         </div>
         <div className="board-row">
-          {renderSquare(boardState[6], 6)}
-          {renderSquare(boardState[7], 7)}
-          {renderSquare(boardState[8], 8)}
+          {renderSquare(props.boardState[6], 6)}
+          {renderSquare(props.boardState[7], 7)}
+          {renderSquare(props.boardState[8], 8)}
         </div>
-      </div>
-      <div>
-        <button onClick={() => Reset()}>Reset</button>
       </div>
     </>
   );
